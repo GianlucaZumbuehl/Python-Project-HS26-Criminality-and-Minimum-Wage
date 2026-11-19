@@ -1,0 +1,8 @@
+# Schwarz weisses Grunddesign. Farben hier ändern.
+[theme]
+base = "light"
+primaryColor = "#000000"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F2F2F2"
+textColor = "#000000"
+font = "sans serif"
