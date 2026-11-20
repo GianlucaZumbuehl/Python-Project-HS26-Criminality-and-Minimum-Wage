@@ -20,6 +20,9 @@ DATEN = ORDNER.parent / "Group_project_part_caner" / "Crime_Pop_clean_copy2.csv"
 EINFUEHRUNG = {"Neuenburg": 2017, "Genf": 2020, "Basel-Stadt": 2022}
 ERSTES_VOLLES_JAHR = {"Neuenburg": 2018, "Genf": 2021, "Basel-Stadt": 2023}
 
+# Farbe des Mindestlohn Kantons in allen Grafiken (UZH Blau)
+HAUPTKANTON_FARBE = "#0028A5"
+
 # Kontrollkantone mit parallelen Trends
 KONTROLLEN = {
     "Neuenburg": ["Aargau", "Freiburg", "St. Gallen"],
@@ -57,7 +60,7 @@ def grafik_trends(df, kanton, kontrollen):
         index = daten["rate"] / vorher * 100
 
         if k == kanton:
-            ax.plot(daten["Year"], index, color="black", linewidth=3, label=k)
+            ax.plot(daten["Year"], index, color=HAUPTKANTON_FARBE, linewidth=3, label=k)
         else:
             ax.plot(daten["Year"], index, color="grey", linestyle=linien[i % 3], label=k)
 
@@ -88,7 +91,7 @@ def event_study(df, kanton, kontrollen):
 def grafik_event_study(df, kanton, kontrollen):
     effekt = event_study(df, kanton, kontrollen)
     fig, ax = plt.subplots(figsize=(8, 4))
-    ax.plot(effekt.index, effekt.values, color="black", marker="o")
+    ax.plot(effekt.index, effekt.values, color=HAUPTKANTON_FARBE, marker="o")
     ax.axhline(0, color="grey")
     ax.axvline(EINFUEHRUNG[kanton], color="black", linestyle=":")
     ax.set_xlabel("Jahr")
@@ -147,7 +150,7 @@ def grafik_did(df, kanton, kontrollen):
     kontrolle = d[d["Treat"] == 0].groupby("Year")["log_rate"].mean()
 
     fig, ax = plt.subplots(figsize=(8, 4))
-    ax.plot(treat.index, treat.values, color="black", linewidth=3, label=kanton)
+    ax.plot(treat.index, treat.values, color=HAUPTKANTON_FARBE, linewidth=3, label=kanton)
     ax.plot(kontrolle.index, kontrolle.values, color="grey", linestyle="--",
             label="Kontrollen (Durchschnitt)")
     ax.axvline(ERSTES_VOLLES_JAHR[kanton] - 0.5, color="black", linestyle=":")
