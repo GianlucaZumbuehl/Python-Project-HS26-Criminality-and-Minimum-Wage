@@ -26,7 +26,7 @@ h3 {{color: {small_title_color} !important;}}
 """, unsafe_allow_html=True)
 
 # ------------------------------------------------------------
-# Uhr oben rechts (Stunden und Minuten)
+# Uhr oben rechts
 # ------------------------------------------------------------
 
 
@@ -48,8 +48,13 @@ st.title("Minimum Wage and Crime in Swiss Cantons")
 # 1. Was machen wir?
 # ------------------------------------------------------------
 st.header("1. What we do")
-st.write("PLATZHALTER: Fragestellung. Führt ein kantonaler Mindestlohn zu weniger Kriminalität "
-         "bei jungen Erwachsenen? Kurz erklären, warum das interessant ist.")
+st.write("Switzerland is a federal state with the subsidiarity Principe. This means that what is not written as task in the higher instance is in the next lower instance and so on. One of these themes is minimum wage. In Switzerland there is no national minimum wage Instead, the cantons of Neuchâtel, Jura, Ticino, Geneva and Basel-Stadt have introduced their own minimum wages. Recently also some communes determine own minimum wages like Luzern since January 2026 and in Zurich from January 2027. Minimum wages are a political Newland and only court judgements have cleared this recently, for cantons in 2017. (quelle1) and communes in may 2026 (quelle 2)."
+
+         "Interestingly, minimum wages in Switzerland are seen as an interference with economic freedom, which is not permitted. Therefore, minimum wages are only permitted as a social policy measure. While they can be used to combat poverty, they cannot be employed as an economic policy instrument to regulate wages. This means they must be set at a relatively low level."
+
+         "People in the low-wage sector who struggle with the high living standards in Switzerland should benefit most from this. We therefore asked ourselves how this effect could be measured. We though that an increase in wages could reduce the shoplifting rate, which often happens spontaneously, and often relate to everyday consumer goods. This leads us to our research question: Do minimum wages influence shoplifting by 20- to 29-year-olds?"
+
+         "We focus on this age group because young Adults starting out their career, are particularly likely to work in low-paid sectors like, retail or gastronomy industry, and therefore are often directly affected by minimum wage.")
 
 
 # ------------------------------------------------------------
