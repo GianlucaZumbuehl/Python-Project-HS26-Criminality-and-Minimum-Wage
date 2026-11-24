@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import statsmodels.formula.api as smf
 
 
+
 # ============================================================
 # EINSTELLUNGEN (hier anpassen)
 # ============================================================
@@ -98,22 +99,23 @@ def grafik_event_study(df, kanton, kontrollen):
     punkte = effekt[(effekt.index != jahr) & (effekt.index != jahr - 1)]
     referenz = effekt[effekt.index == jahr - 1]
 
-    fig, ax = plt.subplots(figsize=(9, 5.5))
-    ax.plot(punkte.index, punkte.values, "o", color=HAUPTKANTON_FARBE)
+    fig, ax = plt.subplots(figsize=(12, 5.5))
+    
     ax.plot(referenz.index, referenz.values, "o", color="#eb6834",
             label=f"Reference year ({jahr - 1})")
     ax.axhline(0, color="grey", linewidth=1)
     ax.axvline(jahr, color="black", linestyle=":",
                label=f"Minimum wage introduction ({jahr})")
+        # blaue Punkte = Effekt pro Jahr; in der Legende mit der Liste der Kontrollkantone
+    ax.plot(punkte.index, punkte.values, "o", color=HAUPTKANTON_FARBE,
+            label="Control cantons:\n" + "\n".join(kontrollen))
     ax.set_xticks(effekt.index)
     ax.tick_params(axis="x", rotation=45)
     ax.set_xlabel("Year")
     ax.set_ylabel("Effect relative to reference year (%)")
-    ax.set_title(f"Event study: {kanton} vs. {', '.join(kontrollen)}")
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.25), frameon=False, ncol=2)
-    fig.tight_layout()
+    ax.set_title(f"Event study: {kanton}")
+    ax.legend(bbox_to_anchor=(1, 1), loc="upper left")  # Legende rechts neben der Grafik
     return fig
-
 
 # ============================================================
 # 3. DIFFERENCE IN DIFFERENCES (Code von Caner)
@@ -161,11 +163,12 @@ def grafik_did(df, kanton, kontrollen):
     kontrolle = np.exp([b0, b0 + b2]) * 100
     kontrafakt = np.exp([b0 + b1, b0 + b1 + b2]) * 100
 
-    fig, ax = plt.subplots(figsize=(8, 5.5))
+    fig, ax = plt.subplots(figsize=(12, 5.5))
     ax.plot(x, kontrafakt, color=HAUPTKANTON_FARBE, linestyle="--",
-            label=f"{kanton} without minimum wage (counterfactual)")
+            label=f"{kanton} without minimum wage\n(counterfactual)")
     ax.plot(x, treat, color=HAUPTKANTON_FARBE, label=f"{kanton} (minimum wage)")
-    ax.plot(x, kontrolle, color="#eb6834", label=f"Control cantons (average of {len(kontrollen)})")
+    ax.plot(x, kontrolle, color="#eb6834", label="Control cantons (average)")
+    ax.plot([], [], " ", label="\n".join(kontrollen))  # Liste der Kontrollkantone, nur Text
 
     # log-skalierte Achse, beschriftet in %
     ax.set_yscale("log")
@@ -179,7 +182,6 @@ def grafik_did(df, kanton, kontrollen):
     ax.set_xlim(jahre[0], jahre[-1])
     ax.set_xlabel("Year")
     ax.set_ylabel("Share of accused persons (log scale)")
-    ax.set_title(f"Difference-in-Differences: {kanton} vs. {', '.join(kontrollen)}")
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.2), frameon=False)
-    fig.tight_layout()
+    ax.set_title(f"Difference-in-Differences: {kanton}")
+    ax.legend(bbox_to_anchor=(1, 1), loc="upper left")  # Legende rechts neben der Grafik
     return fig

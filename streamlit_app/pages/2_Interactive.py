@@ -158,7 +158,7 @@ if len(kontrollen) == 0:
 # ------------------------------------------------------------
 st.header("2. Parallel Trends")
 
-zeige_grafik(f.grafik_trends(df, kanton, kontrollen))
+zeige_grafik(f.grafik_trends(df, kanton, kontrollen)) #Zeige_grafik zentriert einfach grafik, nur f.grafik_trend => nicht zentriert
 
 # ------------------------------------------------------------
 # 3. Difference-in-Differences
