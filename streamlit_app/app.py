@@ -79,7 +79,28 @@ uebersicht = pd.DataFrame({
     "Control cantons": [", ".join(f.KONTROLLEN[k]) for k in f.EINFUEHRUNG],
 })
 st.dataframe(uebersicht, hide_index=True)
+##### Zusatz 
 
+# Grafik zentriert anzeigen. "mitte" = Breite der mittleren Spalte (links und rechts je 1)
+def zeige_grafik(fig, mitte=10):
+    links, spalte, rechts = st.columns([1, mitte, 1])
+    spalte.pyplot(fig)
+
+
+# Ausgewählter Mindestlohn-Kanton hellblau markieren (wie auf Seite 2)
+# Ausgewählter Mindestlohn-Kanton hellblau markieren (wie auf Seite 2)
+st.markdown("""
+<style>
+.st-key-kanton_auswahl button[data-selected="true"],
+.st-key-kanton_auswahl [data-testid="stBaseButton-pillsActive"] {
+    background-color: #d6e0f5 !important;
+    border-color: #0028A5 !important;
+}
+.st-key-kanton_auswahl button[data-selected="true"] * {
+    color: #000000 !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ------------------------------------------------------------
 # 4. Parallel Trends
@@ -87,14 +108,16 @@ st.dataframe(uebersicht, hide_index=True)
 st.header("4. Parallel Trends")
 st.write("PLATZHALTER: Welche Kontrollkantone haben die stärksten parallelen Trends?")
 
-tab1, tab2, tab3 = st.tabs(["Neuenburg", "Genf", "Basel-Stadt"])
-with tab1:
-    st.pyplot(f.grafik_trends(df, "Neuenburg", f.KONTROLLEN["Neuenburg"]))
-with tab2:
-    st.pyplot(f.grafik_trends(df, "Genf", f.KONTROLLEN["Genf"]))
-with tab3:
-    st.pyplot(f.grafik_trends(df, "Basel-Stadt", f.KONTROLLEN["Basel-Stadt"]))
+# Mindestlohn-Kanton einmal auswählen, gilt für Abschnitt 4 und 5
+kanton = st.pills("Canton with minimum wage", options=list(f.EINFUEHRUNG),
+                  selection_mode="single", default="Neuenburg", key="kanton_auswahl")
 
+if kanton is None:
+    st.info("Please choose a canton with minimum wage.")
+else:
+    kontrollen = f.KONTROLLEN[kanton]
+    zeige_grafik(f.grafik_trends(df, kanton, kontrollen))
+    zeige_grafik(f.grafik_trends_durchschnitt(df, kanton, kontrollen))
 
 # ------------------------------------------------------------
 # 5. Resultate: Regressionen und Event Study
@@ -102,20 +125,18 @@ with tab3:
 st.header("5. Results")
 st.write("PLATZHALTER: Kurze Erklärung der Regression.")
 
-tab1, tab2, tab3 = st.tabs(["Neuenburg", "Genf", "Basel-Stadt"])
-for tab, kanton in [(tab1, "Neuenburg"), (tab2, "Genf"), (tab3, "Basel-Stadt")]:
-    with tab:
-        kontrollen = f.KONTROLLEN[kanton]
+# Gleicher Kanton wie in Abschnitt 4
+if kanton is not None:
+    st.caption(f"Results for {kanton} (selection in section 4).")
 
-        links, rechts = st.columns(2)
-        links.subheader("DiD")
-        links.pyplot(f.grafik_did(df, kanton, kontrollen))
-        rechts.subheader("Event Study")
-        rechts.pyplot(f.grafik_event_study(df, kanton, kontrollen))
+    st.subheader("DiD")
+    zeige_grafik(f.grafik_did(df, kanton, kontrollen))
 
-        st.subheader("Regression Table")
-        st.dataframe(f.did_tabelle(df, kanton, kontrollen), hide_index=True)
-        st.caption("* p < 0.1   ** p < 0.05   *** p < 0.01")
+    st.subheader("Regression Table")
+    st.dataframe(f.did_tabelle(df, kanton, kontrollen), hide_index=True)
+
+    st.subheader("Event Study")
+    zeige_grafik(f.grafik_event_study(df, kanton, kontrollen))
 
 
 # ------------------------------------------------------------
