@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 import funktionen as f
 
-st.set_page_config(page_title="Results", layout="wide")
+st.set_page_config(page_title="Analysis", layout="wide")
 
 website_title_color = "#0028A5"
 chapter_title_color = "#000000"
@@ -41,13 +41,13 @@ uhr()
 
 df = f.daten_laden()
 
-st.title("Minimum Wage and Crime in Swiss Cantons")
+st.title("Minimum Wage and Crime in Swiss Cantons", anchor=False)
 
 
 # ------------------------------------------------------------
 # 1. Was machen wir?
 # ------------------------------------------------------------
-st.header("1. What we do")
+st.header("1. What we do", anchor=False)
 st.write("Switzerland is a federal state with the subsidiarity Principe. This means that what is not written as task in the higher instance is in the next lower instance and so on. One of these themes is minimum wage. In Switzerland there is no national minimum wage Instead, the cantons of Neuchâtel, Jura, Ticino, Geneva and Basel-Stadt have introduced their own minimum wages. Recently also some communes determine own minimum wages like Luzern since January 2026 and in Zurich from January 2027. Minimum wages are a political Newland and only court judgements have cleared this recently, for cantons in 2017. (quelle1) and communes in may 2026 (quelle 2)."
 
          "Interestingly, minimum wages in Switzerland are seen as an interference with economic freedom, which is not permitted. Therefore, minimum wages are only permitted as a social policy measure. While they can be used to combat poverty, they cannot be employed as an economic policy instrument to regulate wages. This means they must be set at a relatively low level."
@@ -60,7 +60,7 @@ st.write("Switzerland is a federal state with the subsidiarity Principe. This me
 # ------------------------------------------------------------
 # 2. Daten und Data Cleaning
 # ------------------------------------------------------------
-st.header("2. Data and Data Cleaning")
+st.header("2. Data and Data Cleaning", anchor=False)
 st.write("PLATZHALTER: Woher kommen die Daten (BFS Polizeiliche Kriminalstatistik, Bevölkerung)?")
 st.write("PLATZHALTER: Wie wurden die Daten bereinigt und zusammengeführt?")
 
@@ -68,7 +68,7 @@ st.write("PLATZHALTER: Wie wurden die Daten bereinigt und zusammengeführt?")
 # ------------------------------------------------------------
 # 3. Ausgewählte Kantone
 # ------------------------------------------------------------
-st.header("3. Selected Cantons")
+st.header("3. Selected Cantons", anchor=False)
 st.write("PLATZHALTER: Warum diese Mindestlohn Kantone und warum diese Kontrollkantone?")
 
 # Übersicht aus den Einstellungen in funktionen.py (nur Anzeige)
@@ -105,13 +105,14 @@ st.markdown("""
 # ------------------------------------------------------------
 # 4. Parallel Trends
 # ------------------------------------------------------------
-st.header("4. Parallel Trends")
+st.header("4. Analysis", anchor=False)
 st.write("PLATZHALTER: Welche Kontrollkantone haben die stärksten parallelen Trends?")
+
 
 # Mindestlohn-Kanton einmal auswählen, gilt für Abschnitt 4 und 5
 kanton = st.pills("Canton with minimum wage", options=list(f.EINFUEHRUNG),
                   selection_mode="single", default="Neuenburg", key="kanton_auswahl")
-
+st.subheader("Parallel Trends", anchor=False)
 if kanton is None:
     st.info("Please choose a canton with minimum wage.")
 else:
@@ -122,39 +123,40 @@ else:
 # ------------------------------------------------------------
 # 5. Resultate: Regressionen und Event Study
 # ------------------------------------------------------------
-st.header("5. Results")
+
 st.write("PLATZHALTER: Kurze Erklärung der Regression.")
 
 # Gleicher Kanton wie in Abschnitt 4
 if kanton is not None:
     st.caption(f"Results for {kanton} (selection in section 4).")
 
-    st.subheader("DiD")
+    st.subheader("DiD" ,anchor=False)
     zeige_grafik(f.grafik_did(df, kanton, kontrollen))
 
-    st.subheader("Regression Table")
+    st.subheader("Regression Table", anchor=False)
     st.dataframe(f.did_tabelle(df, kanton, kontrollen), hide_index=True)
 
-    st.subheader("Event Study")
+    st.subheader("Event Study", anchor=False)
     zeige_grafik(f.grafik_event_study(df, kanton, kontrollen))
 
 
 # ------------------------------------------------------------
 # 6. Interpretation und Diskussion
 # ------------------------------------------------------------
-st.header("6. Interpretation and Discussion")
+st.header("5. Results", anchor=False)
+st.header("6. Interpretation and Discussion", anchor=False)
 
-st.subheader("Interpretation")
+st.subheader("Interpretation", anchor=False)
 st.write("PLATZHALTER: Was bedeuten die Resultate pro Kanton?")
 
-st.subheader("Significance")
+
 st.write("PLATZHALTER: Wie sicher sind die Resultate?")
 
 
 # ------------------------------------------------------------
 # 7. Limitationen
 # ------------------------------------------------------------
-st.header("7. Limitations")
+st.header("7. Limitations", anchor=False)
 st.write("PLATZHALTER: Was man mit den Resultaten anfangen kann und was nicht. "
          "Zum Beispiel kleine Fallzahlen, nur ein behandelter Kanton pro Schätzung, "
          "andere Massnahmen zur gleichen Zeit, Ladendiebstahl nur auf Antrag verfolgt.")

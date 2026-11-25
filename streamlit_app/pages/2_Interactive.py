@@ -6,6 +6,23 @@
 
 import streamlit as st
 import funktionen as f
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+# ------------------------------------------------------------
+# Uhr oben rechts
+# ------------------------------------------------------------
+
+
+@st.fragment(run_every=10)
+def uhr():
+    jetzt = datetime.now(ZoneInfo("Europe/Zurich")).strftime("%H:%M")
+    st.markdown(f"<p style='text-align:right; font-size: 1.5rem;'>{jetzt}</p>",
+                unsafe_allow_html=True)
+
+
+uhr()
+
 
 st.set_page_config(page_title="Interactive", layout="wide")
 
@@ -16,7 +33,7 @@ def zeige_grafik(fig, mitte=10):
     links, spalte, rechts = st.columns([1, mitte, 1])
     spalte.pyplot(fig)
 
-st.title("Try it yourself")
+st.title("Try it yourself", anchor=False)
 st.write("Choose a canton with a minimum wage and one or more control cantons. "
          "The analyses below are calculated directly from the data for your selection.")
 
@@ -24,7 +41,7 @@ st.write("Choose a canton with a minimum wage and one or more control cantons. "
 # ------------------------------------------------------------
 # 1. Auswahl
 # ------------------------------------------------------------
-st.header("1. Your selection")
+st.header("1. Your selection", anchor=False)
 
 
 
@@ -83,14 +100,14 @@ if len(kontrollen) == 0:
 # ------------------------------------------------------------
 # 2. Parallel Trends (Funktion aus funktionen.py)
 # ------------------------------------------------------------
-st.header("2. Parallel Trends")
+st.header("2. Parallel Trends", anchor=False)
 
 zeige_grafik(f.grafik_trends(df, kanton, kontrollen)) #Zeige_grafik zentriert einfach grafik, nur f.grafik_trend => nicht zentriert
 zeige_grafik(f.grafik_trends_durchschnitt(df, kanton, kontrollen))
 # ------------------------------------------------------------
 # 3. Difference-in-Differences
 # ------------------------------------------------------------
-st.header("3. Difference-in-Differences")
+st.header("3. Difference-in-Differences", anchor=False)
 
 zeige_grafik(f.grafik_did(df, kanton, kontrollen))
 
@@ -109,6 +126,6 @@ st.caption("Standard errors: HC1 (robust).")
 # ------------------------------------------------------------
 # 4. Event Study
 # ------------------------------------------------------------
-st.header("4. Event Study")
+st.header("4. Event Study", anchor=False)
 
 zeige_grafik(f.grafik_event_study(df, kanton, kontrollen))
