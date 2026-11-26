@@ -7,6 +7,16 @@ import streamlit as st
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
+st.set_page_config(page_title="Home", layout="wide")
+
+# Center the whole page content with a maximum width (easier to read on big screens)
+st.markdown("""
+<style>
+[data-testid="stMainBlockContainer"] {max-width: 1100px; margin: 0 auto;}
+h1, h2 {text-align: center;}
+</style>
+""", unsafe_allow_html=True)
+
 # ------------------------------------------------------------
 # Uhr oben rechts
 # ------------------------------------------------------------
@@ -22,7 +32,6 @@ def uhr():
 uhr()
 
 
-st.set_page_config(page_title="Home", layout="wide")
 
 st.title("Minimum Wage and Crime in Swiss Cantons", anchor=False) #, anchor=False makes the weird symbol next to the title disappear
 st.write("Annette Pitch")

@@ -9,6 +9,16 @@ import funktionen as f
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
+st.set_page_config(page_title="Interactive", layout="wide")
+
+# Center the whole page content with a maximum width (easier to read on big screens)
+st.markdown("""
+<style>
+[data-testid="stMainBlockContainer"] {max-width: 1100px; margin: 0 auto;}
+h1, h2 {text-align: center;}
+</style>
+""", unsafe_allow_html=True)
+
 # ------------------------------------------------------------
 # Uhr oben rechts
 # ------------------------------------------------------------
@@ -24,7 +34,6 @@ def uhr():
 uhr()
 
 
-st.set_page_config(page_title="Interactive", layout="wide")
 
 df = f.daten_laden()
 # Grafik zentriert anzeigen: mittlere Spalte = 4/6 der Seitenbreite
@@ -56,7 +65,7 @@ st.markdown("""
 .st-key-kontrollen button[data-selected="true"],
 .st-key-kontrollen [data-testid="stBaseButton-pillsActive"] {
     background-color: #fde2d2 !important;
-    border-color: #eb6834 !important;
+    border-color: #E8732A !important;
 }
 .st-key-kanton button[data-selected="true"] *,
 .st-key-kontrollen button[data-selected="true"] * {

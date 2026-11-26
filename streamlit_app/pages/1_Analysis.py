@@ -11,6 +11,14 @@ import funktionen as f
 
 st.set_page_config(page_title="Analysis", layout="wide")
 
+# Center the whole page content with a maximum width (easier to read on big screens)
+st.markdown("""
+<style>
+[data-testid="stMainBlockContainer"] {max-width: 1100px; margin: 0 auto;}
+h1, h2 {text-align: center;}
+</style>
+""", unsafe_allow_html=True)
+
 website_title_color = "#0028A5"
 chapter_title_color = "#000000"
 small_title_color = "#000000"
@@ -109,10 +117,11 @@ st.header("4. Analysis", anchor=False)
 st.write("PLATZHALTER: Welche Kontrollkantone haben die stärksten parallelen Trends?")
 
 
+st.subheader("Parallel Trends", anchor=False)
+
 # Mindestlohn-Kanton einmal auswählen, gilt für Abschnitt 4 und 5
 kanton = st.pills("Canton with minimum wage", options=list(f.EINFUEHRUNG),
                   selection_mode="single", default="Neuenburg", key="kanton_auswahl")
-st.subheader("Parallel Trends", anchor=False)
 if kanton is None:
     st.info("Please choose a canton with minimum wage.")
 else:
