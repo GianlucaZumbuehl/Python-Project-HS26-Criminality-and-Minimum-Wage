@@ -1,48 +1,30 @@
 
-## Code von Caner
+# Code von Caner
 # SEITE 2: Interaktiv (Caner)
 # Die Person wählt selbst einen Mindestlohn-Kanton und Kontrollkantone.
 # Danach werden DiD und Event Study für diese Auswahl berechnet.
 
 import streamlit as st
 import funktionen as f
-from datetime import datetime
-from zoneinfo import ZoneInfo
+import layout
 
 st.set_page_config(page_title="Interactive", layout="wide")
 
-# Center the whole page content with a maximum width (easier to read on big screens)
-st.markdown("""
-<style>
-[data-testid="stMainBlockContainer"] {max-width: 1100px; margin: 0 auto;}
-h1, h2 {text-align: center;}
-</style>
-""", unsafe_allow_html=True)
-
-# ------------------------------------------------------------
-# Uhr oben rechts
-# ------------------------------------------------------------
-
-
-@st.fragment(run_every=10)
-def uhr():
-    jetzt = datetime.now(ZoneInfo("Europe/Zurich")).strftime("%H:%M")
-    st.markdown(f"<p style='text-align:right; font-size: 1.5rem;'>{jetzt}</p>",
-                unsafe_allow_html=True)
-
-
-uhr()
-
+layout.stil()
+layout.uhr()
 
 
 df = f.daten_laden()
 # Grafik zentriert anzeigen: mittlere Spalte = 4/6 der Seitenbreite
 # Grafik zentriert anzeigen. "mitte" = Breite der mittleren Spalte (links und rechts je 1)
+
+
 def zeige_grafik(fig, mitte=10):
     links, spalte, rechts = st.columns([1, mitte, 1])
     spalte.pyplot(fig)
 
-st.title("Try it yourself", anchor=False)
+
+st.title("Try it yourself!", anchor=False)
 st.write("Choose a canton with a minimum wage and one or more control cantons. "
          "The analyses below are calculated directly from the data for your selection.")
 
@@ -51,7 +33,6 @@ st.write("Choose a canton with a minimum wage and one or more control cantons. "
 # 1. Auswahl
 # ------------------------------------------------------------
 st.header("1. Your selection", anchor=False)
-
 
 
 # Farben der Auswahl: Mindestlohn-Kanton hellblau, Kontrollkantone hellorange (wie in der DiD-Grafik)
@@ -76,7 +57,7 @@ st.markdown("""
 
 # Mindestlohn-Kanton (nur die drei aus unserer Analyse), genau einer wählbar
 kanton = st.pills(
-    "Canton with minimum wage",
+    "Choose canton with minimum wage",
     options=list(f.EINFUEHRUNG),
     selection_mode="single",
     default="Neuenburg",
@@ -84,7 +65,8 @@ kanton = st.pills(
 )
 
 # Kontrollkantone: alle Kantone ohne Mindestlohn, mehrere wählbar
-moegliche_kontrollen = sorted(k for k in df["Canton"].unique() if k not in f.EINFUEHRUNG)
+moegliche_kontrollen = sorted(
+    k for k in df["Canton"].unique() if k not in f.EINFUEHRUNG)
 
 kontrollen = st.pills(
     "Control cantons (click to select or deselect)",
@@ -111,7 +93,8 @@ if len(kontrollen) == 0:
 # ------------------------------------------------------------
 st.header("2. Parallel Trends", anchor=False)
 
-zeige_grafik(f.grafik_trends(df, kanton, kontrollen)) #Zeige_grafik zentriert einfach grafik, nur f.grafik_trend => nicht zentriert
+# Zeige_grafik zentriert einfach grafik, nur f.grafik_trend => nicht zentriert
+zeige_grafik(f.grafik_trends(df, kanton, kontrollen))
 zeige_grafik(f.grafik_trends_durchschnitt(df, kanton, kontrollen))
 # ------------------------------------------------------------
 # 3. Difference-in-Differences
@@ -138,3 +121,6 @@ st.caption("Standard errors: HC1 (robust).")
 st.header("4. Event Study", anchor=False)
 
 zeige_grafik(f.grafik_event_study(df, kanton, kontrollen))
+
+
+layout.footer()

@@ -1,51 +1,17 @@
 # SEITE 1: Resultate und Diskussion
 # Starten im Terminal:
 #   cd streamlit_app
-#   streamlit run app.py
+#   streamlit run Home.py
 
 import streamlit as st
-from datetime import datetime
-from zoneinfo import ZoneInfo
 import pandas as pd
 import funktionen as f
+import layout
 
 st.set_page_config(page_title="Analysis", layout="wide")
 
-# Center the whole page content with a maximum width (easier to read on big screens)
-st.markdown("""
-<style>
-[data-testid="stMainBlockContainer"] {max-width: 1100px; margin: 0 auto;}
-h1, h2 {text-align: center;}
-</style>
-""", unsafe_allow_html=True)
-
-website_title_color = "#0028A5"
-chapter_title_color = "#000000"
-small_title_color = "#000000"
-title_graph_color = "#000000"
-
-st.markdown(f"""
-<style>
-h1 {{color: {website_title_color} !important;}}
-h2 {{color: {chapter_title_color} !important;}}
-h3 {{color: {small_title_color} !important;}}
-[data-testid="stWidgetLabel"] p {{color: {title_graph_color} !important;}}
-</style>
-""", unsafe_allow_html=True)
-
-# ------------------------------------------------------------
-# Uhr oben rechts
-# ------------------------------------------------------------
-
-
-@st.fragment(run_every=10)
-def uhr():
-    jetzt = datetime.now(ZoneInfo("Europe/Zurich")).strftime("%H:%M")
-    st.markdown(f"<p style='text-align:right; font-size: 1.5rem;'>{jetzt}</p>",
-                unsafe_allow_html=True)
-
-
-uhr()
+layout.stil()
+layout.uhr()
 
 df = f.daten_laden()
 
@@ -55,14 +21,18 @@ st.title("Minimum Wage and Crime in Swiss Cantons", anchor=False)
 # ------------------------------------------------------------
 # 1. Was machen wir?
 # ------------------------------------------------------------
-st.header("1. What we do", anchor=False)
-st.write("Switzerland is a federal state with the subsidiarity Principe. This means that what is not written as task in the higher instance is in the next lower instance and so on. One of these themes is minimum wage. In Switzerland there is no national minimum wage Instead, the cantons of Neuchâtel, Jura, Ticino, Geneva and Basel-Stadt have introduced their own minimum wages. Recently also some communes determine own minimum wages like Luzern since January 2026 and in Zurich from January 2027. Minimum wages are a political Newland and only court judgements have cleared this recently, for cantons in 2017. (quelle1) and communes in may 2026 (quelle 2)."
+st.header("1. Background and Research Question", anchor=False)
 
-         "Interestingly, minimum wages in Switzerland are seen as an interference with economic freedom, which is not permitted. Therefore, minimum wages are only permitted as a social policy measure. While they can be used to combat poverty, they cannot be employed as an economic policy instrument to regulate wages. This means they must be set at a relatively low level."
+st.subheader("Minimum Wages in Switzerland", anchor=False)
+st.write('Switzerland is a federal state with the subsidiarity Principe. This means that what is not written as task in the higher instance is in the next lower instance and so on. One of these themes is minimum wage. In Switzerland there is no national minimum wage Instead, the cantons of Neuchâtel, Jura, Ticino, Geneva and Basel-Stadt have introduced their own minimum wages. Recently also some communes determine own minimum wages like Luzern since January 2026 and in Zurich from January 2027. Minimum wages are a political Newland and only court judgements have cleared this recently, for cantons in 2017. (quelle1) and communes in may 2026 (quelle 2).')
+st.write('Interestingly, minimum wages in Switzerland are seen as an interference with economic freedom, which is not permitted. Therefore, minimum wages are only permitted as a social policy measure. While they can be used to combat poverty, they cannot be employed as an economic policy instrument to regulate wages. This means they must be set at a relatively low level.')
 
-         "People in the low-wage sector who struggle with the high living standards in Switzerland should benefit most from this. We therefore asked ourselves how this effect could be measured. We though that an increase in wages could reduce the shoplifting rate, which often happens spontaneously, and often relate to everyday consumer goods. This leads us to our research question: Do minimum wages influence shoplifting by 20- to 29-year-olds?"
+st.subheader("Why Shoplifting?", anchor=False)
+st.write('People in the low-wage sector who struggle with the high living standards in Switzerland should benefit most from this. We therefore asked ourselves how this effect could be measured. We though that an increase in wages could reduce the shoplifting rate, which often happens spontaneously, and often relate to everyday consumer goods. ')
 
-         "We focus on this age group because young Adults starting out their career, are particularly likely to work in low-paid sectors like, retail or gastronomy industry, and therefore are often directly affected by minimum wage.")
+st.subheader("Research Question", anchor=False)
+st.write('This leads us to our research question: **Do minimum wages influence shoplifting by 20- to 29-year-olds?**')
+st.write('We focus on this age group because young Adults starting out their career, are particularly likely to work in low-paid sectors like, retail or gastronomy industry, and therefore are often directly affected by minimum wage.')
 
 
 # ------------------------------------------------------------
@@ -87,9 +57,11 @@ uebersicht = pd.DataFrame({
     "Control cantons": [", ".join(f.KONTROLLEN[k]) for k in f.EINFUEHRUNG],
 })
 st.dataframe(uebersicht, hide_index=True)
-##### Zusatz 
+# Zusatz
 
 # Grafik zentriert anzeigen. "mitte" = Breite der mittleren Spalte (links und rechts je 1)
+
+
 def zeige_grafik(fig, mitte=10):
     links, spalte, rechts = st.columns([1, mitte, 1])
     spalte.pyplot(fig)
@@ -120,7 +92,7 @@ st.write("PLATZHALTER: Welche Kontrollkantone haben die stärksten parallelen Tr
 st.subheader("Parallel Trends", anchor=False)
 
 # Mindestlohn-Kanton einmal auswählen, gilt für Abschnitt 4 und 5
-kanton = st.pills("Canton with minimum wage", options=list(f.EINFUEHRUNG),
+kanton = st.pills("Choose canton with minimum wage", options=list(f.EINFUEHRUNG),
                   selection_mode="single", default="Neuenburg", key="kanton_auswahl")
 if kanton is None:
     st.info("Please choose a canton with minimum wage.")
@@ -139,7 +111,7 @@ st.write("PLATZHALTER: Kurze Erklärung der Regression.")
 if kanton is not None:
     st.caption(f"Results for {kanton} (selection in section 4).")
 
-    st.subheader("DiD" ,anchor=False)
+    st.subheader("DiD", anchor=False)
     zeige_grafik(f.grafik_did(df, kanton, kontrollen))
 
     st.subheader("Regression Table", anchor=False)
@@ -169,3 +141,6 @@ st.header("7. Limitations", anchor=False)
 st.write("PLATZHALTER: Was man mit den Resultaten anfangen kann und was nicht. "
          "Zum Beispiel kleine Fallzahlen, nur ein behandelter Kanton pro Schätzung, "
          "andere Massnahmen zur gleichen Zeit, Ladendiebstahl nur auf Antrag verfolgt.")
+
+
+layout.footer()

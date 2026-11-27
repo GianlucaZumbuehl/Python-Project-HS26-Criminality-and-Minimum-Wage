@@ -56,7 +56,7 @@ def grafik_trends(df, kanton, kontrollen):
     data = df.copy()
     data['AccusedLog'] = (np.log(data['AccusedRate']))
 
-    plt.rcParams['font.family'] = 'Times New Roman'
+    plt.rcParams['font.family'] = 'sans-serif'
     colour1 = "#ED0101"
     colour2 = "#B4B4B4"
     colour_cantons = {
@@ -116,7 +116,7 @@ def grafik_trends(df, kanton, kontrollen):
             label='First full year 2018')
 
     # 4. Add titles, labels, and return the plot
-    plt.title(f'Crime Rate Development: {kanton}', fontsize=16, pad=20)
+    plt.title(f'Crime Rate Development: {kanton}', fontsize=16, pad=20, fontweight="bold")
     plt.xlabel('Year', fontsize=12)
     plt.ylabel('Change from baseline in %', fontsize=12)
     plt.axhline(0, color=colour2, linewidth=0.8, linestyle='-',
@@ -132,7 +132,7 @@ def grafik_trends_durchschnitt(df, kanton, kontrollen):
     data = df.copy()
     data['AccusedLog'] = (np.log(data['AccusedRate']))
 
-    plt.rcParams['font.family'] = 'Times New Roman'
+    plt.rcParams['font.family'] = 'sans-serif'
     colour1 = "#ED0101"
     colour2 = "#B4B4B4"
     colour_treated = "#0028A5"   # blue (wie die Mindestlohn-Kantone oben)
@@ -173,7 +173,7 @@ def grafik_trends_durchschnitt(df, kanton, kontrollen):
 
     # 4. Add titles, labels, and return the plot
     plt.title(
-        f'Crime Rate Development: {kanton} vs average of control cantons', fontsize=16, pad=20)
+        f'Crime Rate Development: {kanton} vs average of control cantons', fontsize=16, pad=20, fontweight="bold")
     plt.xlabel('Year', fontsize=12)
     plt.ylabel('Change from baseline in %', fontsize=12)
     plt.axhline(0, color=colour2, linewidth=0.8, linestyle='-',
@@ -216,7 +216,7 @@ def grafik_event_study(df, kanton, kontrollen):
     referenz = effekt[effekt.index == jahr - 1]
 
     # gleiche Schrift wie Parallel Trends
-    plt.rcParams['font.family'] = 'Times New Roman'
+    plt.rcParams['font.family'] = 'sans-serif'
     fig, ax = plt.subplots(figsize=(12, 5.5))
     ax.plot(referenz.index, referenz.values, "o", color="#E8732A",
             label=f"Reference year ({jahr - 1})")
@@ -230,7 +230,7 @@ def grafik_event_study(df, kanton, kontrollen):
     ax.tick_params(axis="x", rotation=45)
     ax.set_xlabel("Year", fontsize=12)
     ax.set_ylabel("Effect relative to reference year (%)", fontsize=12)
-    ax.set_title(f"Event study: {kanton}", fontsize=16, pad=20)
+    ax.set_title(f"Event study: {kanton}", fontsize=16, pad=20, fontweight="bold")
     ax.grid(True, linestyle="-", alpha=0.6)   # Gitter wie Parallel Trends
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=3,
               fontsize=13, frameon=False)  # Legende unter der Grafik
@@ -287,7 +287,7 @@ def grafik_did(df, kanton, kontrollen):
     kontrafakt = np.exp([b0 + b1, b0 + b1 + b2]) * 100
 
     # gleiche Schrift wie Parallel Trends
-    plt.rcParams['font.family'] = 'Times New Roman'
+    plt.rcParams['font.family'] = 'sans-serif'
     fig, ax = plt.subplots(figsize=(12, 5.5))
     ax.plot(x, kontrafakt, color=HAUPTKANTON_FARBE, linestyle="--",
             label=f"{kanton} without min. wage (counterfactual)")
@@ -307,7 +307,7 @@ def grafik_did(df, kanton, kontrollen):
     ax.set_xlim(jahre[0], jahre[-1])
     ax.set_xlabel("Year", fontsize=12)
     ax.set_ylabel("Share of accused persons (log scale)", fontsize=12)
-    ax.set_title(f"Difference-in-Differences: {kanton}", fontsize=16, pad=20)
+    ax.set_title(f"Difference-in-Differences: {kanton}", fontsize=16, pad=20, fontweight="bold")
     ax.grid(True, linestyle="-", alpha=0.6)   # Gitter wie Parallel Trends
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.2), ncol=3, fontsize=13, frameon=False,
               columnspacing=1.0, handlelength=1.5)  # Legende unter der Grafik
